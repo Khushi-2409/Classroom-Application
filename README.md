@@ -32,7 +32,8 @@ You will hear back within 48 hours from us via email.
 
 ```
 virtualenv env --python=python3.8
-source env/bin/activate
+source env/bin/activate  ---> iska windows ky tha ?  likh terminal m activate kr frseource
+
 pip install -r requirements.txt
 ```
 ### Reset DB
@@ -53,6 +54,6 @@ bash run.sh
 pytest -vvv -s tests/
 
 # for test coverage report
-# pytest --cov
-# open htmlcov/index.html
+ pytest --cov
+ start htmlcov/index.html
 ```

@@ -1,5 +1,8 @@
 import pytest
 import json
+
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.dirname('tests')))
 from tests import app
 
 
@@ -37,7 +40,7 @@ def h_teacher_1():
     headers = {
         'X-Principal': json.dumps({
             'teacher_id': 1,
-            'user_id': 3
+            'user_id': 4
         })
     }
 
@@ -49,7 +52,7 @@ def h_teacher_2():
     headers = {
         'X-Principal': json.dumps({
             'teacher_id': 2,
-            'user_id': 4
+            'user_id': 5
         })
     }
 
@@ -61,8 +64,7 @@ def h_principal():
     headers = {
         'X-Principal': json.dumps({
             'principal_id': 1,
-            'user_id': 5
+            'user_id': 6
         })
     }
-
     return headers

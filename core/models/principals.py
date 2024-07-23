@@ -1,3 +1,5 @@
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.dirname('core')))
 from core import db
 from core.libs import helpers
 

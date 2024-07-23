@@ -1,11 +1,15 @@
 import enum
+
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.dirname('core')))
+from core.models.users import User
 from core import db
 from core.apis.decorators import AuthPrincipal
 from core.libs import helpers, assertions
 from core.models.teachers import Teacher
 from core.models.students import Student
 from sqlalchemy.types import Enum as BaseEnum
-
+from sqlalchemy.orm import Session
 
 class GradeEnum(str, enum.Enum):
     A = 'A'
@@ -14,7 +18,7 @@ class GradeEnum(str, enum.Enum):
     D = 'D'
 
 
-class AssignmentStateEnum(str, enum.Enum):
+class AssignmentStateEnum(str, enum.Enum):  
     DRAFT = 'DRAFT'
     SUBMITTED = 'SUBMITTED'
     GRADED = 'GRADED'
@@ -23,7 +27,7 @@ class AssignmentStateEnum(str, enum.Enum):
 class Assignment(db.Model):
     __tablename__ = 'assignments'
     id = db.Column(db.Integer, db.Sequence('assignments_id_seq'), primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey(Student.id), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey(Student.id), nullable=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey(Teacher.id), nullable=True)
     content = db.Column(db.Text)
     grade = db.Column(BaseEnum(GradeEnum))
@@ -31,8 +35,6 @@ class Assignment(db.Model):
     created_at = db.Column(db.TIMESTAMP(timezone=True), default=helpers.get_utc_now, nullable=False)
     updated_at = db.Column(db.TIMESTAMP(timezone=True), default=helpers.get_utc_now, nullable=False, onupdate=helpers.get_utc_now)
 
-    def __repr__(self):
-        return '<Assignment %r>' % self.id
 
     @classmethod
     def filter(cls, *criterion):
@@ -86,8 +88,11 @@ class Assignment(db.Model):
 
     @classmethod
     def get_assignments_by_student(cls, student_id):
-        return cls.filter(cls.student_id == student_id).all()
+        return db.session.query(Assignment).filter_by(student_id=student_id).all()
+
 
     @classmethod
-    def get_assignments_by_teacher(cls):
-        return cls.query.all()
+    def get_assignments_by_teacher(cls, teacher_id):
+        return db.session.query(Assignment).filter_by(teacher_id=teacher_id).all()
+
+    
